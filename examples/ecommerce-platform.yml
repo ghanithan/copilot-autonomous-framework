@@ -1,0 +1,227 @@
+# E-commerce Platform Example Configuration
+project:
+  name: "Modern E-commerce Platform"
+  description: "Full-stack e-commerce platform with product catalog, shopping cart, and payment processing"
+  mission: "Create a scalable e-commerce platform that provides excellent user experience and robust admin tools"
+  domain_context: "E-commerce, product management, inventory tracking, payment processing, order fulfillment, customer management"
+
+# Target Users and Value Proposition
+users:
+  target_users:
+    - role: "Online Retailers"
+      description: "Small to medium businesses wanting to sell products online"
+    - role: "Customers"
+      description: "End users browsing and purchasing products"
+    - role: "Store Administrators"
+      description: "Store owners managing inventory, orders, and customer service"
+    - role: "Platform Administrators"
+      description: "Technical staff maintaining the platform and monitoring performance"
+  
+  value_propositions:
+    - "Modern, responsive shopping experience across all devices"
+    - "Comprehensive admin dashboard for store management"
+    - "Secure payment processing with multiple payment methods"
+    - "Real-time inventory tracking and automated reorder alerts"
+    - "Built-in SEO optimization and marketing tools"
+
+# Reference Documents
+documents:
+  prd_reference: "docs/ecommerce-platform-requirements.md"
+  technical_spec_reference: "docs/api-specification.md"
+  api_reference: "docs/api-documentation.md"
+  design_docs: "docs/ui-design-system.md"
+
+# Technology Stack
+stack:
+  backend:
+    language: "rust"
+    framework: "axum"
+    config_ref: "configs/rust-backend.yml"
+  
+  frontend:
+    language: "typescript"
+    framework: "react"
+    config_ref: "configs/react-frontend.yml"
+  
+  database_type: "postgresql"
+  deployment_platform: "docker-compose"
+
+# Architecture Configuration
+architecture:
+  pattern: "clean-architecture"
+  principles: ["SOLID", "KISS", "YAGNI", "DRY"]
+  layers: ["entities", "use_cases", "adapters", "frameworks"]
+
+# Performance Requirements
+performance:
+  targets:
+    - metric: "page_load_time"
+      target: "2s"
+      context: "product catalog pages with 50+ items"
+    - metric: "search_response_time"
+      target: "300ms"
+      context: "product search with filters"
+    - metric: "checkout_flow_time"
+      target: "5s"
+      context: "complete checkout process from cart to confirmation"
+    - metric: "api_response_time"
+      target: "150ms"
+      context: "standard CRUD operations"
+
+# Development Environment
+environment:
+  dev_setup_commands:
+    - "rustup update stable"
+    - "cargo install sqlx-cli"
+    - "npm install"
+    - "docker-compose up -d postgres redis"
+  
+  build_commands:
+    - "cargo check"
+    - "npm run build"
+    - "cargo build --release"
+  
+  test_commands:
+    - "cargo test"
+    - "npm test"
+    - "cargo test --test integration_tests"
+  
+  dev_server_commands:
+    - "cargo run"
+    - "npm run dev"
+  
+  env_variables:
+    - name: "DATABASE_URL"
+      description: "PostgreSQL database connection string"
+      required: true
+      default: "postgresql://localhost:5432/ecommerce_db"
+    - name: "STRIPE_SECRET_KEY"
+      description: "Stripe API secret key for payment processing"
+      required: true
+      default: ""
+    - name: "JWT_SECRET"
+      description: "Secret key for JWT token generation"
+      required: true
+      default: ""
+
+# Development Timeline
+timeline:
+  total_days: 14
+  phases:
+    - name: "Core Backend"
+      days: 4
+      description: "User auth, product catalog, and basic API"
+      modules: ["user_management", "product_catalog", "authentication", "api_framework"]
+    - name: "Shopping Features"
+      days: 3
+      description: "Shopping cart, checkout, and payment processing"
+      modules: ["shopping_cart", "checkout_flow", "payment_integration", "order_management"]
+    - name: "Frontend Interface"
+      days: 4
+      description: "React storefront and admin dashboard"
+      modules: ["storefront_ui", "admin_dashboard", "product_pages", "checkout_ui"]
+    - name: "Advanced Features"
+      days: 3
+      description: "Search, recommendations, and analytics"
+      modules: ["search_engine", "recommendation_system", "analytics", "reporting"]
+
+# Quality Configuration
+quality:
+  test_coverage_threshold: 85
+  architecture_compliance: true
+  performance_benchmarks: true
+
+# Integration Requirements
+integrations:
+  - name: "Stripe API"
+    purpose: "Payment processing for credit cards and digital wallets"
+    api_details: "REST API v2 with webhook support for payment events"
+  - name: "SendGrid API"
+    purpose: "Email notifications for order confirmations and marketing"
+    api_details: "REST API v3 for transactional and marketing emails"
+  - name: "Elasticsearch"
+    purpose: "Product search and filtering capabilities"
+    api_details: "REST API for indexing and searching product catalog"
+
+# Success Metrics
+success_metrics:
+  - category: "Performance"
+    metrics: "Page load <2s, API response <150ms, search <300ms"
+  - category: "User Experience"
+    metrics: "Checkout completion rate >80%, mobile usability score >90"
+  - category: "Business"
+    metrics: "Order processing accuracy >99.9%, payment success rate >98%"
+
+# Constraints
+constraints:
+  - "PCI DSS compliance for payment card data handling"
+  - "GDPR compliance for customer data and privacy"
+  - "Mobile-first responsive design for all interfaces"
+  - "High availability with <1 minute downtime for deployments"
+  - "Multi-currency and multi-language support"
+
+# Technical Decisions
+technical_decisions:
+  - decision: "Rust Backend vs Node.js"
+    rationale: "Need high performance for concurrent requests and memory safety"
+    implications: "Requires Rust expertise but provides better performance and reliability"
+  - decision: "PostgreSQL vs MongoDB"
+    rationale: "Complex relational data with ACID compliance for financial transactions"
+    implications: "Need proper database design and migration strategy"
+  - decision: "Server-side Rendering vs SPA"
+    rationale: "SEO requirements for product pages and better initial load performance"
+    implications: "More complex deployment but better search engine optimization"
+
+# Clean Architecture Examples
+entity_examples:
+  - name: "Product"
+    description: "Product entity with SKU, pricing, inventory, and catalog information"
+  - name: "Order"
+    description: "Customer order with line items, shipping, and payment details"
+  - name: "Customer"
+    description: "Customer account with authentication, preferences, and order history"
+  - name: "ShoppingCart"
+    description: "Shopping cart with items, quantities, and pricing calculations"
+
+use_case_examples:
+  - name: "ProcessOrder"
+    description: "Handle order creation, payment processing, and inventory updates"
+  - name: "SearchProducts"
+    description: "Search and filter products with faceted search and recommendations"
+  - name: "ManageInventory"
+    description: "Track stock levels, handle backorders, and trigger reorder alerts"
+  - name: "AuthenticateCustomer"
+    description: "Handle customer login, registration, and session management"
+
+adapter_examples:
+  - name: "ProductController"
+    description: "REST API endpoints for product catalog operations"
+  - name: "PaymentGateway"
+    description: "Stripe integration adapter for payment processing"
+  - name: "DatabaseRepository"
+    description: "PostgreSQL adapter for data persistence"
+  - name: "SearchIndexAdapter"
+    description: "Elasticsearch integration for product search"
+
+framework_examples:
+  - name: "AxumWebServer"
+    description: "Rust web server with routing and middleware"
+  - name: "ReactStorefront"
+    description: "React components for customer-facing storefront"
+  - name: "PostgreSQLDatabase"
+    description: "Database connection and transaction management"
+  - name: "RedisCache"
+    description: "Caching layer for session data and frequently accessed items"
+
+# Template-specific context
+project_domain: "E-commerce Platform"
+template_engine: false
+build_system: true
+build_tools: "Webpack, PostCSS, Docker"
+deployment_target: "Docker Compose"
+test_coverage: 85
+benchmark_framework: "criterion"
+parsing_strategy: "serde JSON/YAML parsing"
+component_type: "struct/trait"
+interface_pattern: "traits"
+primary_language: "rust"

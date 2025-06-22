@@ -1,0 +1,49 @@
+# Python Backend Configuration
+backend:
+  language: "python"
+  framework: "fastapi"
+  
+conventions:
+  file_naming: "snake_case"
+  function_naming: "snake_case"
+  class_naming: "PascalCase"
+  error_handling: "custom exception classes"
+  type_hints: "mandatory for all functions"
+
+dependencies:
+  core: ["fastapi", "pydantic", "uvicorn"]
+  testing: ["pytest", "pytest-asyncio", "httpx"]
+  validation: ["pydantic"]
+  
+example_filename: "feature_module"
+parsing_strategy: "pydantic validation"
+benchmark_framework: "pytest-benchmark"
+error_handling_pattern: |
+  Use custom exception classes inheriting from base exceptions.
+  Always include context and meaningful error messages.
+
+language_conventions:
+  - "Follow PEP 8 style guide strictly"
+  - "Use type hints for all function signatures"
+  - "Error handling with custom exception classes"
+  - "Use dataclasses or Pydantic models for structured data"
+
+additional_install_commands:
+  - "pip install --upgrade pip"
+
+dev_setup_commands:
+  - "pip install -r requirements-dev.txt"
+
+build_commands:
+  - "python -m py_compile **/*.py"
+
+test_commands:
+  - "pytest"
+  - "pytest --benchmark-only"
+
+coverage_command: "pytest --cov=src --cov-report=xml"
+format_command: "black ."
+lint_command: "flake8 && mypy src"
+benchmark_command: "pytest --benchmark-only"
+
+backend_dir: "src"

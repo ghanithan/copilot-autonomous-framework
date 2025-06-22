@@ -1,0 +1,48 @@
+# React Frontend Configuration
+frontend:
+  language: "typescript"
+  framework: "react"
+  
+conventions:
+  component_naming: "PascalCase"
+  file_naming: "kebab-case"
+  function_naming: "camelCase"
+  state_management: "zustand"
+  styling_framework: "tailwindcss"
+
+dependencies:
+  core: ["react", "typescript", "zustand"]
+  ui: ["tailwindcss", "lucide-react"]
+  testing: ["vitest", "@testing-library/react"]
+
+example_filename: "feature-component"
+state_management: "zustand"
+styling_framework: "tailwindcss"
+benchmark_framework: "vitest benchmark"
+
+language_conventions:
+  - "Component naming uses PascalCase, file naming uses kebab-case"
+  - "State management with zustand, styling with tailwindcss"
+  - "All props interfaces must be explicitly typed"
+  - "Custom hooks for business logic, prefer composition over inheritance"
+
+additional_install_commands: []
+
+dev_setup_commands:
+  - "npm install --save-dev @types/node"
+
+build_commands:
+  - "npm run build"
+  - "npm run typecheck"
+
+test_commands:
+  - "npm test"
+  - "npm run test:coverage"
+
+dev_server_commands:
+  - "npm run dev"
+
+coverage_command: "npm run test:coverage"
+format_command: "npm run format"
+lint_command: "npm run lint"
+benchmark_command: "npm run benchmark"

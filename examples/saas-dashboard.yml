@@ -1,0 +1,205 @@
+# SaaS Dashboard Example Configuration
+project:
+  name: "SaaS Analytics Dashboard"
+  description: "Modern analytics dashboard with real-time data visualization and user management"
+  mission: "Create a scalable SaaS platform for business analytics and reporting"
+  domain_context: "SaaS platform, analytics, real-time data processing, user management, subscription billing"
+
+# Target Users and Value Proposition
+users:
+  target_users:
+    - role: "Business Analysts"
+      description: "Users who need to analyze business metrics and create reports"
+    - role: "Product Managers"
+      description: "Users who track product performance and user engagement"
+    - role: "Executives"
+      description: "Leadership who need high-level business insights"
+    - role: "Data Teams"
+      description: "Teams who need to integrate and visualize data sources"
+  
+  value_propositions:
+    - "Real-time analytics with interactive dashboards"
+    - "Multi-tenant SaaS architecture with user management"
+    - "Scalable data processing with microservices"
+    - "Modern React-based UI with responsive design"
+    - "API-first architecture for third-party integrations"
+
+# Reference Documents
+documents:
+  prd_reference: "docs/saas-platform-requirements.md"
+  technical_spec_reference: "docs/api-specification.md"
+  api_reference: "docs/api-documentation.md"
+  design_docs: "docs/ui-design-system.md"
+
+# Technology Stack
+stack:
+  backend:
+    language: "python"
+    framework: "fastapi"
+    config_ref: "configs/python-backend.yml"
+  
+  frontend:
+    language: "typescript"
+    framework: "react"
+    config_ref: "configs/react-frontend.yml"
+  
+  database_type: "postgresql"
+  deployment_platform: "aws"
+
+# Architecture Configuration
+architecture:
+  pattern: "clean-architecture"
+  principles: ["SOLID", "KISS", "YAGNI", "DRY"]
+  layers: ["entities", "use_cases", "adapters", "frameworks"]
+
+# Performance Requirements
+performance:
+  targets:
+    - metric: "api_response_time"
+      target: "200ms"
+      context: "complex analytics queries"
+    - metric: "dashboard_load_time"
+      target: "1s"
+      context: "initial dashboard with 10+ widgets"
+    - metric: "real_time_updates"
+      target: "500ms"
+      context: "WebSocket data updates"
+
+# Development Environment
+environment:
+  dev_setup_commands:
+    - "python -m venv venv"
+    - "source venv/bin/activate"
+    - "pip install -r requirements.txt"
+    - "npm install"
+  
+  build_commands:
+    - "python -m py_compile **/*.py"
+    - "npm run build"
+    - "docker build -t saas-dashboard ."
+  
+  test_commands:
+    - "pytest"
+    - "npm test"
+    - "pytest --benchmark-only"
+  
+  dev_server_commands:
+    - "uvicorn main:app --reload"
+    - "npm run dev"
+  
+  env_variables:
+    - name: "DATABASE_URL"
+      description: "PostgreSQL database connection string"
+      required: true
+      default: "postgresql://localhost:5432/saas_db"
+    - name: "JWT_SECRET_KEY"
+      description: "Secret key for JWT token generation"
+      required: true
+      default: ""
+
+# Development Timeline
+timeline:
+  total_days: 12
+  phases:
+    - name: "Core API"
+      days: 3
+      description: "User authentication, basic CRUD operations"
+      modules: ["auth_service", "user_management", "api_framework"]
+    - name: "Analytics Engine"
+      days: 3
+      description: "Data processing and analytics calculations"
+      modules: ["data_processor", "analytics_engine", "reporting"]
+    - name: "Dashboard UI"
+      days: 3
+      description: "React dashboard with data visualization"
+      modules: ["dashboard_components", "chart_widgets", "real_time_updates"]
+    - name: "Integration & Deployment"
+      days: 3
+      description: "Third-party integrations and production deployment"
+      modules: ["api_integrations", "deployment_pipeline", "monitoring"]
+
+# Quality Configuration
+quality:
+  test_coverage_threshold: 85
+  architecture_compliance: true
+  performance_benchmarks: true
+
+# Integration Requirements
+integrations:
+  - name: "Stripe API"
+    purpose: "Subscription billing and payment processing"
+    api_details: "REST API v2 with webhooks for subscription events"
+  - name: "SendGrid API"
+    purpose: "Email notifications and user communications"
+    api_details: "REST API v3 for transactional emails"
+
+# Success Metrics
+success_metrics:
+  - category: "Performance"
+    metrics: "API response <200ms, dashboard load <1s"
+  - category: "Scalability"
+    metrics: "Support 1000+ concurrent users"
+  - category: "Reliability"
+    metrics: "99.9% uptime, automated error recovery"
+
+# Constraints
+constraints:
+  - "Multi-tenant architecture with data isolation"
+  - "GDPR compliance for user data handling"
+  - "Scalable to handle large datasets (millions of records)"
+  - "Real-time updates without impacting performance"
+
+# Technical Decisions
+technical_decisions:
+  - decision: "FastAPI vs Django"
+    rationale: "Need high-performance async API with automatic OpenAPI docs"
+    implications: "Requires careful async/await handling throughout codebase"
+  - decision: "PostgreSQL vs MongoDB"
+    rationale: "Complex relational queries and ACID compliance requirements"
+    implications: "Need proper database migration strategy and connection pooling"
+
+# Clean Architecture Examples
+entity_examples:
+  - name: "User"
+    description: "User account with authentication and subscription details"
+  - name: "Dashboard"
+    description: "User dashboard configuration with widgets and layout"
+  - name: "DataSource"
+    description: "External data source integration with connection settings"
+
+use_case_examples:
+  - name: "AuthenticateUser"
+    description: "Handle user login, JWT generation, and session management"
+  - name: "ProcessAnalytics"
+    description: "Process raw data and generate analytics insights"
+  - name: "UpdateDashboard"
+    description: "Real-time dashboard updates via WebSocket"
+
+adapter_examples:
+  - name: "UserController"
+    description: "FastAPI endpoints for user management operations"
+  - name: "DatabaseRepository"
+    description: "PostgreSQL adapter for data persistence"
+  - name: "WebSocketGateway"
+    description: "Real-time communication adapter"
+
+framework_examples:
+  - name: "FastAPIApp"
+    description: "FastAPI application with middleware and routing"
+  - name: "ReactDashboard"
+    description: "React components for dashboard interface"
+  - name: "PostgreSQLDatabase"
+    description: "Database connection and query execution"
+
+# Template-specific context
+project_domain: "SaaS Analytics Platform"
+template_engine: false
+build_system: true
+build_tools: "Webpack, PostCSS, Docker"
+deployment_target: "AWS ECS"
+test_coverage: 85
+benchmark_framework: "pytest-benchmark"
+parsing_strategy: "pydantic validation"
+component_type: "class/function"
+interface_pattern: "abstract base classes"
+primary_language: "python"

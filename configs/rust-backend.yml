@@ -1,0 +1,52 @@
+# Rust Backend Configuration
+backend:
+  language: "rust"
+  framework: "tauri"
+  
+conventions:
+  file_naming: "snake_case"
+  function_naming: 
+    private: "snake_case"
+    public: "PascalCase"
+  error_handling: "anyhow + thiserror"
+  serialization: "serde with JSON/YAML tags mandatory"
+
+dependencies:
+  core: ["serde", "anyhow", "thiserror", "tokio"]
+  parsing: ["nom"]
+  testing: ["criterion", "mockall"]
+  
+example_filename: "feature_module"
+parsing_strategy: "nom parser combinators"
+benchmark_framework: "criterion"
+error_handling_pattern: |
+  Use anyhow for application errors, thiserror for library errors.
+  Always wrap errors with context: anyhow::Context::context(err, "operation failed")
+
+language_conventions:
+  - "All structs MUST have both JSON and YAML tags"
+  - "Use anyhow for application errors, thiserror for library errors"
+  - "File naming: snake_case, functions: camelCase (private) / PascalCase (public)"
+  - "Constructor pattern: NewTypeName() -> impl Trait"
+
+additional_install_commands:
+  - "rustup update stable"
+  - "cargo install cargo-tarpaulin"
+
+dev_setup_commands:
+  - "rustup component add clippy rustfmt"
+
+build_commands:
+  - "cargo check"
+  - "cargo build"
+
+test_commands:
+  - "cargo test"
+  - "cargo bench"
+
+coverage_command: "cargo tarpaulin --out Xml"
+format_command: "cargo fmt"
+lint_command: "cargo clippy -- -D warnings"
+benchmark_command: "cargo bench"
+
+backend_dir: "src"

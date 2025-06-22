@@ -1,0 +1,122 @@
+# GitHub Copilot Setup Steps for {{PROJECT_NAME}}
+
+setup_steps:
+  # Environment Preparation
+  - name: "Check Prerequisites"
+    commands:
+      {{#if RUST_BACKEND}}
+      - "rustc --version"
+      - "cargo --version"
+      {{/if}}
+      {{#if NODE_FRONTEND}}
+      - "node --version"
+      - "npm --version"
+      {{/if}}
+      {{#if PYTHON_BACKEND}}
+      - "python --version"
+      - "pip --version"
+      {{/if}}
+      {{#each ADDITIONAL_PREREQUISITES}}
+      - "{{this}}"
+      {{/each}}
+
+  # Dependencies Installation
+  - name: "Install Dependencies"
+    commands:
+      {{#if RUST_BACKEND}}
+      - "cd {{BACKEND_DIR}} && cargo check"
+      {{/if}}
+      {{#if NODE_FRONTEND}}
+      - "npm install"
+      {{/if}}
+      {{#if PYTHON_BACKEND}}
+      - "pip install -r requirements.txt"
+      {{/if}}
+      {{#each ADDITIONAL_INSTALL_COMMANDS}}
+      - "{{this}}"
+      {{/each}}
+
+  # Development Environment Setup
+  - name: "Setup Development Environment"
+    commands:
+      {{#each DEV_SETUP_COMMANDS}}
+      - "{{this}}"
+      {{/each}}
+
+  # Build Verification
+  - name: "Verify Build System"
+    commands:
+      {{#each BUILD_COMMANDS}}
+      - "{{this}}"
+      {{/each}}
+
+  # Test Suite Execution
+  - name: "Run Test Suite"
+    commands:
+      {{#each TEST_COMMANDS}}
+      - "{{this}}"
+      {{/each}}
+
+  # Development Server Startup
+  - name: "Start Development Server"
+    commands:
+      {{#each DEV_SERVER_COMMANDS}}
+      - "{{this}}"
+      {{/each}}
+
+# Environment Variables
+environment_variables:
+  {{#each ENV_VARIABLES}}
+  - name: "{{NAME}}"
+    description: "{{DESCRIPTION}}"
+    {{#if DEFAULT}}
+    default: "{{DEFAULT}}"
+    {{/if}}
+    {{#if REQUIRED}}
+    required: {{REQUIRED}}
+    {{/if}}
+  {{/each}}
+
+# Configuration Files
+config_files:
+  {{#each CONFIG_FILES}}
+  - path: "{{PATH}}"
+    description: "{{DESCRIPTION}}"
+    {{#if TEMPLATE}}
+    template: "{{TEMPLATE}}"
+    {{/if}}
+  {{/each}}
+
+# Project Structure Validation
+project_structure:
+  required_directories:
+    {{#each REQUIRED_DIRECTORIES}}
+    - "{{this}}"
+    {{/each}}
+  
+  required_files:
+    {{#each REQUIRED_FILES}}
+    - "{{this}}"
+    {{/each}}
+
+# Performance Benchmarks Setup
+benchmarks:
+  {{#each BENCHMARK_SETUP}}
+  - name: "{{NAME}}"
+    command: "{{COMMAND}}"
+    target: "{{TARGET}}"
+  {{/each}}
+
+# Architecture Validation
+architecture_validation:
+  - name: "Check {{ARCHITECTURE_PATTERN}} Compliance"
+    description: "Validate dependency rules are followed"
+    command: "{{ARCHITECTURE_VALIDATION_COMMAND}}"
+  
+  - name: "Performance Benchmarks"
+    description: "Ensure performance targets are met"
+    command: "{{BENCHMARK_COMMAND}}"
+  
+  - name: "Test Coverage"
+    description: "Verify test coverage meets requirements"
+    command: "{{COVERAGE_COMMAND}}"
