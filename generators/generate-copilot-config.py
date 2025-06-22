@@ -4,6 +4,7 @@ GitHub Copilot Autonomous Development Framework
 Configuration Generator
 
 Generates: copilot-instructions.md, copilot-context.md, copilot-setup-steps.yml
+           claude-context.md, .claude/commands/
 """
 import os
 import sys
@@ -118,14 +119,16 @@ class CopilotConfigGenerator:
     def find_framework_directory(self) -> Path:
         """Find the framework directory"""
         current_dir = Path(__file__).parent.parent
-        if current_dir.name == "copilot-autonomous-framework-standalone":
+        if current_dir.name in ["copilot-autonomous-framework-standalone", "copilot-autonomous-framework"]:
             return current_dir
         
         # Try relative paths
         for path in [
             self.base_dir / "copilot-autonomous-framework-standalone",
-            self.base_dir / "copilot-autonomous-framework",
-            self.base_dir.parent / "copilot-autonomous-framework-standalone"
+            self.base_dir / "copilot-autonomous-framework", 
+            self.base_dir.parent / "copilot-autonomous-framework-standalone",
+            self.base_dir.parent / "copilot-autonomous-framework",
+            Path("/Users/ghanithan/work/src/personal/copilot-autonomous-framework")  # Absolute fallback
         ]:
             if path.exists():
                 return path
@@ -258,6 +261,46 @@ class CopilotConfigGenerator:
         context = self.prepare_template_context()
         return self.template_engine.render(template, context)
     
+    def generate_claude_context(self) -> str:
+        """Generate CLAUDE.md for Claude GitHub app integration"""
+        template = self.load_template('claude-context.template.md')
+        context = self.prepare_template_context()
+        return self.template_engine.render(template, context)
+    
+    def generate_claude_commands(self, output_dir: str = '.'):
+        """Generate .claude/commands/ directory with custom review commands"""
+        output_path = Path(output_dir)
+        claude_commands_dir = output_path / '.claude' / 'commands'
+        claude_commands_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Get list of command templates
+        commands_dir = self.framework_dir / 'templates' / 'claude-commands'
+        if not commands_dir.exists():
+            print("⚠️  Claude commands templates not found, skipping...")
+            return
+        
+        context = self.prepare_template_context()
+        
+        # Copy command files
+        for command_file in commands_dir.glob('*.md'):
+            if command_file.name == 'README.md':
+                continue  # Skip README for now, will process separately
+                
+            template_content = command_file.read_text()
+            rendered_content = self.template_engine.render(template_content, context)
+            
+            output_file = claude_commands_dir / command_file.name
+            output_file.write_text(rendered_content)
+            print(f"📝 Generated Claude command: {output_file}")
+        
+        # Generate README for commands
+        readme_path = commands_dir / 'README.md'
+        if readme_path.exists():
+            readme_content = readme_path.read_text()
+            rendered_readme = self.template_engine.render(readme_content, context)
+            (claude_commands_dir / 'README.md').write_text(rendered_readme)
+            print(f"📚 Generated Claude commands README: {claude_commands_dir / 'README.md'}")
+    
     def generate_issue_template(self, output_dir: str = '.'):
         """Generate GitHub issue template"""
         template = self.load_template('github-issue-template.md')
@@ -294,15 +337,15 @@ class CopilotConfigGenerator:
         print(f"📋 Generated GitHub issue template at {issue_template_dir / 'copilot-autonomous-task.md'}")
     
     def generate_all_configs(self, output_dir: str = '.'):
-        """Generate all GitHub Copilot configuration files"""
+        """Generate all GitHub Copilot and Claude configuration files"""
         output_path = Path(output_dir)
         github_dir = output_path / '.github'
         github_dir.mkdir(exist_ok=True)
         
-        print(f"🚀 Generating GitHub Copilot configuration for {self.config['project']['name']}...")
+        print(f"🚀 Generating GitHub Copilot + Claude configuration for {self.config['project']['name']}...")
         
         try:
-            # Generate core files
+            # Generate core Copilot files
             print("📝 Generating copilot-instructions.md...")
             instructions = self.generate_copilot_instructions()
             (github_dir / 'copilot-instructions.md').write_text(instructions)
@@ -315,15 +358,25 @@ class CopilotConfigGenerator:
             setup_steps = self.generate_setup_steps()
             (github_dir / 'copilot-setup-steps.yml').write_text(setup_steps)
             
+            # Generate Claude integration files
+            print("🤖 Generating CLAUDE.md...")
+            claude_context = self.generate_claude_context()
+            (output_path / 'CLAUDE.md').write_text(claude_context)
+            
+            print("🔧 Generating Claude custom commands...")
+            self.generate_claude_commands(output_dir)
+            
             # Generate issue template
             print("🎫 Generating GitHub issue template...")
             self.generate_issue_template(output_dir)
             
-            print("✅ Successfully generated GitHub Copilot configuration:")
+            print("✅ Successfully generated GitHub Copilot + Claude configuration:")
             print("   - .github/copilot-instructions.md")
             print("   - .github/copilot-context.md")
             print("   - .github/copilot-setup-steps.yml")
             print("   - .github/ISSUE_TEMPLATE/copilot-autonomous-task.md")
+            print("   - CLAUDE.md")
+            print("   - .claude/commands/ (review commands)")
             
             # Validate generated files
             self.validate_generated_files(github_dir)
@@ -368,6 +421,10 @@ def main():
                        help='Only validate configuration without generating files')
     parser.add_argument('--issue-template-only', action='store_true',
                        help='Generate only the GitHub issue template')
+    parser.add_argument('--claude-only', action='store_true',
+                       help='Generate only Claude integration files (CLAUDE.md and commands)')
+    parser.add_argument('--copilot-only', action='store_true',
+                       help='Generate only GitHub Copilot files (no Claude integration)')
     
     args = parser.parse_args()
     
@@ -383,6 +440,34 @@ def main():
             print("✅ Configuration file is valid")
         elif args.issue_template_only:
             generator.generate_issue_template(args.output)
+        elif args.claude_only:
+            print(f"🤖 Generating Claude integration files for {generator.config['project']['name']}...")
+            output_path = Path(args.output)
+            
+            claude_context = generator.generate_claude_context()
+            (output_path / 'CLAUDE.md').write_text(claude_context)
+            print("✅ Generated CLAUDE.md")
+            
+            generator.generate_claude_commands(args.output)
+            print("✅ Generated Claude custom commands")
+        elif args.copilot_only:
+            print(f"🚀 Generating GitHub Copilot files for {generator.config['project']['name']}...")
+            output_path = Path(args.output)
+            github_dir = output_path / '.github'
+            github_dir.mkdir(exist_ok=True)
+            
+            instructions = generator.generate_copilot_instructions()
+            (github_dir / 'copilot-instructions.md').write_text(instructions)
+            
+            context = generator.generate_copilot_context()
+            (github_dir / 'copilot-context.md').write_text(context)
+            
+            setup_steps = generator.generate_setup_steps()
+            (github_dir / 'copilot-setup-steps.yml').write_text(setup_steps)
+            
+            generator.generate_issue_template(args.output)
+            
+            print("✅ Generated GitHub Copilot configuration (Copilot only)")
         else:
             generator.generate_all_configs(args.output)
             

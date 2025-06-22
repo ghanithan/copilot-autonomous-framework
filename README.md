@@ -7,12 +7,14 @@ A comprehensive, configurable framework that enables GitHub Copilot to autonomou
 
 ## 🎯 Overview
 
-This framework generates the complete set of GitHub Copilot configuration files needed for autonomous development:
+This framework generates the complete set of GitHub Copilot and Claude configuration files needed for autonomous development:
 
 - **`.github/copilot-instructions.md`** - Main development instructions and coding standards
 - **`.github/copilot-context.md`** - Project context and domain knowledge  
 - **`.github/copilot-setup-steps.yml`** - Environment setup automation
 - **`.github/ISSUE_TEMPLATE/copilot-autonomous-task.md`** - Issue template for autonomous tasks
+- **`CLAUDE.md`** - Claude review context and project understanding
+- **`.claude/commands/`** - Custom Claude review commands for specialized analysis
 
 ## ✨ Features
 
@@ -22,6 +24,7 @@ This framework generates the complete set of GitHub Copilot configuration files 
 - **🔧 Template-Based**: Fully configurable through YAML configuration
 - **♻️ Reusable**: Same framework works across different projects and PRDs
 - **📊 Quality Assurance**: Automated testing, coverage, and compliance validation
+- **🤖 Claude Integration**: Direct Claude GitHub app integration for comprehensive code reviews
 
 ## 🚀 Quick Start
 
